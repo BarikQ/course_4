@@ -16,139 +16,73 @@ pxH = 752;
 pxW = 480;
 pxSize = W / pxW;
 
-theta = deg2rad(67);      % зенитный угол падения солнечных лучей
-phi = deg2rad(30);      % азимутальный угол падения солнечных лучей
+theta = deg2rad(90) - deg2rad(45);      % зенитный угол падения солнечных лучей
+phi = deg2rad(-45);      % азимутальный угол падения солнечных лучей
+dC = h * tan(pi/2 - theta);
 
 angle = deg2rad(0 : 359);   % вспомогательный массив углов
 x = (d/2) * cos(angle);             % координата x контура пятна
 y = (d/2) * sin(angle);             % координата y контура пятна
 
-xcopy = x;
-ycopy = y;
+xPx = ceil((x + W/2) / pxSize);  % x - контур пятна в пикселях
+yPx = ceil((y + H/2) / pxSize);  % y - контур пятна в пикселях
 
-slength = size(y);
-for i = 1 : slength(2)
-    if(abs(y(i)) >= ((t * tan(theta)) / 2))
-        if(y(i) > 0)
-            y(i) = y(i) - ((t * tan(theta)) / 2);            
-        else
-            y(i) = y(i) + ((t * tan(theta)) / 2);            
+x1 = dC * cos(phi + pi); % x1
+y1 = dC * sin(phi + pi); % y1 
+
+x1Px = ceil((x1 + W/2 + x) / pxSize); % x1 px
+y1Px = ceil((y1 + H/2 + y) / pxSize); % y1 px
+
+x0 = (t + h) * tan(pi/2 - theta) * cos(phi + pi); % контур смещённого пятна (без учёта обрезания круга)
+y0 = (t + h) * tan(pi/2 - theta) * sin(phi + pi); % контур смещённого пятна (без учёта обрезания круга)
+
+x0Px = ceil((x0 + W/2 + x) / pxSize); % x0Px - контур смещённого пятна (без учёта обрезания круга) в пикселях
+y0Px = ceil((y0 + H/2 + y) / pxSize); % y0Px - контур смещённого пятна (без учёта обрезания круга) в пикселях
+
+% нарисовать круги со смещением и поворотом
+image2 = zeros(pxW, pxH);
+for i = 1 : length(x0Px)
+    image2(xPx(i), yPx(i), [3 3 3]) = 1;
+    image2(x1Px(i), y1Px(i), [1 2 1]) = 1;
+    image2(x0Px(i), y0Px(i), [1 1 1]) = 1;
+end
+
+% найти максимумы / минимумы из двух смещённых окружностей
+minX = min(x0Px);
+minY = min(y0Px);
+maxX = max(x1Px);
+maxY = max(x1Px);
+
+if (minX > min(x1Px))
+   minX = min(x1Px);
+end
+if (minY > min(x1Px))
+   minY = min(x1Px);
+end
+if (maxX < max(x0Px))
+   maxX = max(x0Px);
+end
+if (maxY < max(y0Px))
+   maxY = max(y0Px);
+end
+
+x_ = []; % координата усечённого и перемещённого и повёрнутого круга
+y_ = []; % координата усечённого и перемещённого и повёрнутого круга
+% найти пересечение двух окружностей
+for i = minX : maxX
+    for j = minY : maxY
+        in = inpolygon(i, j, x0Px, y0Px);
+        in2 = inpolygon(i, j, x1Px, y1Px);
+        if (in ~= 0 && in2 ~= 0)
+%             image2(i, j, [2 2 2]) = 1; 
+            x_(end + 1) = i;
+            y_(end + 1) = j;
         end
-    else
-        % для последующего удаления
-        y(i) = 15;
-        x(i) = 15;
     end
-    clc;
+end
+for i = 1 : length(x_)
+    image2(x_(i), y_(i), [2 2 2]) = 1;
 end
 
-% удаление не лишних точек
-x(x == 15) = [];
-y(y == 15) = [];
-x = x + W/2;
-y = y + H/2;
-xcopy = xcopy + W/2;
-ycopy = ycopy + H/2;
-
-screenSize = get(0,'screensize');       % получение размера экрана
-plotSize = 500;                         % установка размера фигуры(сторона квадрата)
-figure('Position', [(screenSize(3) - plotSize)/2 (screenSize(4) - plotSize)/2 plotSize plotSize]);
-scatter(xcopy, ycopy, 'b');
-hold on;
-scatter(x, y, 'r');
-xlim([0 W]);
-ylim([0 H]);
-
-% ПИКСЕЛИ
-
-image = zeros(pxH, pxW);
-
-pxX = zeros(1, 360);
-pxY = zeros(1, 360);
-pxXcopy = zeros(1, 360);
-pxYcopy = zeros(1, 360);
-
-pxX = ceil((x) / pxSize);
-pxY = ceil((y) / pxSize);
-pxXcopy = ceil((xcopy) / pxSize);
-pxYcopy = ceil((ycopy) / pxSize);
-
-for it = 1 : length(pxX)
-   image(pxY(it), pxX(it), [1 1 1]) = 1; 
-end
-% image(pxY, pxX, [1 1 1]) = 1;
-for it = 1 : length(pxXcopy)
-   image(pxYcopy(it), pxXcopy(it), [2 2 2]) = 1; 
-end
-
-for xx = 1 : max(pxXcopy)
-   for yy = 1 : max(pxYcopy)
-       in = inpolygon(xx, yy, pxXcopy, pxYcopy);
-       if (in ~= 0)
-%           image(xx, yy, [2 2 2]) = 1; 
-       end
-       
-       in = inpolygon(xx, yy, pxX, pxY);
-       if (in ~= 0)
-           image(yy, xx, [1 1 1]) = 1;
-       end
-   end
-end
-
-%% Поворот изображения
-M = [cos(phi) -sin(phi); sin(phi) cos(phi)];
-v = [x - W/2; y - H/2];
-vrot = (v' * M)';
-hold on;
-scatter(vrot(1, :) + W/2, vrot(2, :) + H/2, 'g');
-
-% ПИКСЕЛИ
-
-pxXrot = ceil((vrot(1, :) + W/2) / pxSize);
-pxYrot = ceil((vrot(2, :) + H/2) / pxSize);
-
-itj = length(pxXrot);
-for it = 1 : length(pxXrot)
-   image(pxYrot(it), pxXrot(it), [3 3 3]) = 1; 
-   itj = itj - 1;
-end
-
-for xx = 1 : max(pxXrot)
-   for yy = 1 : max(pxYrot)
-       in = inpolygon(xx, yy, pxXrot, pxYrot);
-       if (in ~= 0)
-          image(yy, xx, [3 3 3]) = 1; 
-       end
-   end
-end
-
-%% Смещение
-
-r = tan(theta) * h;
-vrot(1, :) = vrot(1, :) + (r * cos(phi));
-vrot(2, :) = vrot(2, :) + (r * sin(phi));
-figure('Position', [(screenSize(3) - plotSize)/2 (screenSize(4) - plotSize)/2 plotSize plotSize]);
-scatter(vrot(1, :), vrot(2, :), '+')
-xlim([-H/2 H/2]);
-ylim([-W/2 W/2]);
-
-% ПИКСЕЛИ
-
-pxXbias = ceil((vrot(1, :) + H/2) / pxSize);
-pxYbias = ceil((vrot(2, :) + W/2) / pxSize);
-
-for it = 1 : length(pxXrot)
-   image(pxXbias(it), pxYbias(it), [1 2 1]) = 1; 
-end
-
-for xx = 1 : max(pxXbias)
-   for yy = 1 : max(pxYbias)
-       in = inpolygon(xx, yy, pxXbias, pxYbias);
-       if (in ~= 0)
-          image(xx, yy, [1 2 1]) = 1; 
-       end
-   end
-end
-
-imshow(image);
-imwrite(image, "circles.png");
+imshow(image2);
+imwrite(image2, "circles.png");
