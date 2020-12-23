@@ -46,8 +46,8 @@ y0Px = ceil((y0 + H/2 + y) / pxSize); % y0Px - контур смещённого пятна (без учёт
 image2 = zeros(pxW, pxH);
 for i = 1 : length(x0Px)
     image2(xPx(i), yPx(i), [3 3 3]) = 1;
-    image2(x1Px(i), y1Px(i), [1 2 1]) = 1;
-    image2(x0Px(i), y0Px(i), [1 1 1]) = 1;
+%     image2(x1Px(i), y1Px(i), [1 2 1]) = 1;
+%     image2(x0Px(i), y0Px(i), [1 1 1]) = 1;
 end
 
 % найти максимумы / минимумы из двух смещённых окружностей
@@ -75,6 +75,14 @@ y_ = []; % координата усечённого и перемещённого и повёрнутого круга
 % найти пересечение двух окружностей
 for i = minX : maxX
     for j = minY : maxY
+        
+        if (i <= 0 || i > pxW)
+            continue;
+        end
+        if (j <= 0 || j > pxH)
+            continue;
+        end
+        
         in = inpolygon(i, j, x0Px, y0Px);
         in2 = inpolygon(i, j, x1Px, y1Px);
         if (in ~= 0 && in2 ~= 0)
@@ -84,6 +92,7 @@ for i = minX : maxX
         end
     end
 end
+
 % Закрашивание общей области
 for i = 1 : length(x_)
     image2(x_(i), y_(i), [2 2 2]) = 1;
