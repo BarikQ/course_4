@@ -61,7 +61,7 @@ ylim([0 H]);
 
 % ПИКСЕЛИ
 
-image = zeros(pxH, pxW, 3);
+image = zeros(pxH, pxW);
 
 pxX = zeros(1, 360);
 pxY = zeros(1, 360);
@@ -73,16 +73,27 @@ pxY = ceil((y) / pxSize);
 pxXcopy = ceil((xcopy) / pxSize);
 pxYcopy = ceil((ycopy) / pxSize);
 
-image(100, 10, 1) = 1;
-
 for it = 1 : length(pxX)
    image(pxY(it), pxX(it), [1 1 1]) = 1; 
 end
-
+% image(pxY, pxX, [1 1 1]) = 1;
 for it = 1 : length(pxXcopy)
    image(pxYcopy(it), pxXcopy(it), [2 2 2]) = 1; 
 end
 
+for xx = 1 : max(pxXcopy)
+   for yy = 1 : max(pxYcopy)
+       in = inpolygon(xx, yy, pxXcopy, pxYcopy);
+       if (in ~= 0)
+%           image(xx, yy, [2 2 2]) = 1; 
+       end
+       
+       in = inpolygon(xx, yy, pxX, pxY);
+       if (in ~= 0)
+           image(yy, xx, [1 1 1]) = 1;
+       end
+   end
+end
 
 %% Поворот изображения
 M = [cos(phi) -sin(phi); sin(phi) cos(phi)];
@@ -91,6 +102,8 @@ vrot = (v' * M)';
 hold on;
 scatter(vrot(1, :) + W/2, vrot(2, :) + H/2, 'g');
 
+% ПИКСЕЛИ
+
 pxXrot = ceil((vrot(1, :) + W/2) / pxSize);
 pxYrot = ceil((vrot(2, :) + H/2) / pxSize);
 
@@ -98,6 +111,15 @@ itj = length(pxXrot);
 for it = 1 : length(pxXrot)
    image(pxYrot(it), pxXrot(it), [3 3 3]) = 1; 
    itj = itj - 1;
+end
+
+for xx = 1 : max(pxXrot)
+   for yy = 1 : max(pxYrot)
+       in = inpolygon(xx, yy, pxXrot, pxYrot);
+       if (in ~= 0)
+          image(yy, xx, [3 3 3]) = 1; 
+       end
+   end
 end
 
 %% Смещение
@@ -110,6 +132,8 @@ scatter(vrot(1, :), vrot(2, :), '+')
 xlim([-H/2 H/2]);
 ylim([-W/2 W/2]);
 
+% ПИКСЕЛИ
+
 pxXbias = ceil((vrot(1, :) + H/2) / pxSize);
 pxYbias = ceil((vrot(2, :) + W/2) / pxSize);
 
@@ -117,4 +141,14 @@ for it = 1 : length(pxXrot)
    image(pxXbias(it), pxYbias(it), [1 2 1]) = 1; 
 end
 
+for xx = 1 : max(pxXbias)
+   for yy = 1 : max(pxYbias)
+       in = inpolygon(xx, yy, pxXbias, pxYbias);
+       if (in ~= 0)
+          image(xx, yy, [1 2 1]) = 1; 
+       end
+   end
+end
+
 imshow(image);
+imwrite(image, "circles.png");
