@@ -1,0 +1,7 @@
+clear all
+close all;
+clc;
+
+line = 956;
+[origX, origY, brutX, brutY, randX, randY] = xlsread("compare.xlsx", 1, "F2:K3");
+origX = xlsread
