@@ -3,21 +3,24 @@ clear all;
 clc;
 
 d = 500e-6;     % диаметр отверстия
-t = 200e-6;     % толщина отверстия
-h = 0.0012;      % высота отверстия
+t = 100e-6;     % толщина отверстия
+h = 0.0007;      % высота отверстия
 
 format long
-H = 4.51e-3;    % Размеры матрицы
-W = 2.88e-3;
+% H = 4.51e-3;    % Размеры матрицы
+% W = 2.88e-3;
+H = 4e-3;    % Размеры матрицы
+W = 4e-3;
 x = zeros(1, 360);
 y = zeros(1, 360);
 
 pxH = 752;
-pxW = 480;
+% pxW = 480;
+pxW = 752;
 pxSize = W / pxW;
 
-theta_src = 55;     % исходный зенитный угол
-phi_src = 58;       % исходный азимутальный угол
+theta_src = 60;     % исходный зенитный угол
+phi_src = 57;       % исходный азимутальный угол
 
 theta = deg2rad(90) - deg2rad(theta_src);      % зенитный угол падения солнечных лучей
 phi = deg2rad(phi_src);                        % азимутальный угол падения солнечных лучей
@@ -69,6 +72,7 @@ if (maxY < max(y0Px))
    maxY = max(y0Px);
 end
 
+squareActualPx = 0;
 % Есть потенциал для оптимизации!!!
 x_ = []; % координата усечённого и перемещённого и повёрнутого круга
 y_ = []; % координата усечённого и перемещённого и повёрнутого круга
@@ -89,9 +93,14 @@ for i = minX : maxX
 %             image2(i, j, [2 2 2]) = 1; 
             x_(end + 1) = i;
             y_(end + 1) = j;
+            squareActualPx = squareActualPx + 1;
         end
     end
 end
+
+squareAllPx = pxH * pxW;
+squareRatio = squareActualPx / squareAllPx;
+square = squareRatio * (H * W)
 
 % Закрашивание общей области
 for i = 1 : length(x_)

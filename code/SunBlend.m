@@ -30,8 +30,8 @@ randMaxPhi = 180;
 % thetaArray = [];
 % phiArray = [];
 for iii = 1 : 1 
-    theta_src = 22;     % исходный зенитный угол
-    phi_src = 22;       % исходный азимутальный угол
+    theta_src = 40;     % исходный зенитный угол
+    phi_src = 0;       % исходный азимутальный угол
 %     theta_src = randMinTh + rand(1, 1) * (randMaxTh - randMinTh);     % исходный зенитный угол
 %     phi_src = randMinPhi + rand(1, 1) * (randMaxPhi - randMinPhi);       % исходный азимутальный угол
     
