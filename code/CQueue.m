@@ -92,7 +92,7 @@ classdef CQueue < handle
         function push(obj, el) % Ñ¹ÈëÐÂÔªËØµ½¶ÓÎ²
             if obj.size >= obj.capacity - 1
                 sz = obj.size();
-                if obj.rear >= obj.front
+                if obj.rear >= obj.beg
                     obj.buffer(1:sz) = obj.buffer(obj.beg:obj.rear-1);                    
                 else
                     obj.buffer(1:sz) = obj.buffer([obj.beg:obj.capacity 1:obj.rear-1]);

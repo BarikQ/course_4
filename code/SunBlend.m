@@ -20,15 +20,17 @@ randMinTh = 1;
 randMaxTh = 80;
 randMinPhi = -180;
 randMaxPhi = 180;
+
 % ЗАПИСЬ В ТАБЛИЦУ
-% filename = 'compare.xlsx';
-% fileData = {"Theta", "Phi", "Центр пятна X", "Центр пятна Y"};
-% writecell(fileData, filename, 'sheet', 1, 'Range', "D1");
-% dataArray = [];
-% xArray = [];
-% yArray = [];
-% thetaArray = [];
-% phiArray = [];
+filename = './tables/compare_new.xlsx';
+fileData = {"Theta", "Phi", "Центр пятна X", "Центр пятна Y"};
+writecell(fileData, filename, 'sheet', 1, 'Range', "D1");
+dataArray = [];
+xArray = [];
+yArray = [];
+thetaArray = [];
+phiArray = [];
+
 for iii = 1 : 1 
     theta_src = 40;     % исходный зенитный угол
     phi_src = 0;       % исходный азимутальный угол
@@ -54,13 +56,15 @@ for iii = 1 : 1
     psX = ceil((x1/2 + x0/2 + W/2) / pxSize);
     x0Px = ceil((x0 + W/2 + x) / pxSize); % x0Px - контур смещённого пятна (без учёта обрезания круга) в пикселях
     y0Px = ceil((y0 + H/2 + y) / pxSize); % y0Px - контур смещённого пятна (без учёта обрезания круга) в пикселях
+    
     % нарисовать круги со смещением и поворотом
     image = zeros(pxW, pxH, 3);
     for i = 1 : length(x0Px)
-        image(xPx(i), yPx(i), [3 3 3]) = 1;
-        image(x1Px(i), y1Px(i), [1 1 1]) = 1;
-        image(x0Px(i), y0Px(i), [1 1 1]) = 1;
+%         image(xPx(i), yPx(i), [3 3 3]) = 1;
+%         image(x1Px(i), y1Px(i), [1 1 1]) = 1;
+%         image(x0Px(i), y0Px(i), [1 1 1]) = 1;
     end
+    
     % найти максимумы / минимумы из двух смещённых окружностей
     minX = min(x0Px);
     minY = min(y0Px);
@@ -78,9 +82,11 @@ for iii = 1 : 1
     if (maxY < max(y0Px))
        maxY = max(y0Px);
     end
+    
     % Есть потенциал для оптимизации!!!
     x_ = []; % координата усечённого и перемещённого и повёрнутого круга
     y_ = []; % координата усечённого и перемещённого и повёрнутого круга
+    
     % найти пересечение двух окружностей
     for i = minX : maxX
         for j = minY : maxY
@@ -101,6 +107,7 @@ for iii = 1 : 1
             end
         end
     end
+    
     % Закрашивание общей области
     for i = 1 : length(x_)
     %     image(x_(i), y_(i), [1 1 3]) = 1;
@@ -108,16 +115,17 @@ for iii = 1 : 1
      image(x_(i), y_(i), 2) = 1;  %Green
      image(x_(i), y_(i), 3) = 0;  %Blue
     end
-%     thetaArray(end + 1) = theta;
-%     phiArray(end + 1) = phi;
-%     xArray(end + 1) = psX;
-%     yArray(end + 1) = psY;
-    imshow(image);
-    imwrite(image, strcat("./Images/Acircle_", num2str(iii), ".png"));
     
-%     fileData = {theta, phi, xArray, yArray};
-%     writecell(fileData, filename, 'sheet', 1, 'Range', strcat("D" + num2str(iii + 1) + ":G" + num2str(iii + 1)));
-%     strcat("D" + num2str(iii + 1) + ":G" + num2str(iii + 1))
+    thetaArray(end + 1) = theta;
+    phiArray(end + 1) = phi;
+    xArray(end + 1) = psX;
+    yArray(end + 1) = psY;
+    imshow(image);
+    imwrite(image, strcat("./images/circle_", num2str(iii), ".png"));
+    
+    fileData = {theta, phi, xArray, yArray};
+    writecell(fileData, filename, 'sheet', 1, 'Range', strcat("D" + num2str(iii + 1) + ":G" + num2str(iii + 1)));
+    strcat("D" + num2str(iii + 1) + ":G" + num2str(iii + 1))
 end
 % % %     range = sprintf('D2:D%d', numel(thetaArray));
     

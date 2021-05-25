@@ -1,14 +1,14 @@
-function [randX, randY] = randPick(imageGS)
-        % параметры устройства
+function [randX, randY] = randPick(imageGS, spotX, spotY)
+
+    % параметры устройства
     d = 0.0003;     % диаметр отверстия
-    t = 0.00005;     % толщина отверстия
-    h = 0.0007;      % высота отверстия
 
     format long
-    height = 4.51e-3;    % Размеры матрицы
-    width = 2.88e-3;
+    height = 4e-3;
+    width = 4e-3;
+
     pxW = 752;
-    pxH = 480;
+    pxH = 752;
     pxSize = width / pxW;
     
     angle = deg2rad(0 : 359);           % вспомогательный массив углов
@@ -18,51 +18,9 @@ function [randX, randY] = randPick(imageGS)
     yPx = ceil((defCircleY + height/2) / pxSize);  % y - контур пятна в пикселях
     defPxRadius = ceil((max(xPx) - min(xPx)) / 2);
 
-    columns = 752;
-    rows = 480;
-    x = 1:columns;
-    y = 1:rows;
-
-    coloredX2 = [];
-    coloredY2 = [];
-
-    currentX = 0;
-    currentY = 0;
-
-    find = false;
-    repeat = zeros(pxH, pxW);
+    coloredX2 = [spotX];
+    coloredY2 = [spotY];
     
-    % поиск первой точки пятна
-    iter = 1;
-    while(find == 0)
-        if (iter > 10000) 
-            break;
-        end
-        randX = randi(columns, 1);
-        randY = randi(rows, 1);
-        
-        if (repeat(randY, randX) == 1)
-            if (any(repeat(:) == 0))
-            continue;
-            else break;
-            end
-        end
-        
-        repeat(randY, randX) = 1;
-        
-        if(squeeze(imageGS(randY, randX, :)) ~= 0)
-            coloredX2(end + 1) = randX;
-            coloredY2(end + 1) = randY;
-            find = true;
-        end
-        iter = iter + 1;
-    end
-    
-    if (length(coloredX2) == 0 || length(coloredY2) == 0) 
-        randX = 0;
-        ranY = 0;
-        return;
-    end
     % Т.К. ПОЛУЧЕННОЕ ПЯТНО 100% МЕНЬШЕ ЧЕМ ТО, ЧТО ПОЛУЧАЕТСЯ БЕЗ НАКЛОНА
     % МАТРИЦЫ МОЖНО ПОИСКАТЬ ПИКСЕЛИ В ПРЕДЕЛАХ ДИАМЕТРА НЕИЗМЕННЁНОГО КРУГА
     % В 4 КВАДРАНТАХ
@@ -110,7 +68,7 @@ function [randX, randY] = randPick(imageGS)
            if (i <= 0 || j <= 0)
               continue; 
            end
-            if(squeeze(imageGS(j, i, :)) ~= 0)
+            if(imageGS(j, i) ~= 0)
                 coloredX2(end + 1) = i;
                 coloredY2(end + 1) = j;
                 isFlag2 = true;
