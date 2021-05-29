@@ -202,7 +202,7 @@ def randPick(arrGS, point, arr, folder_path, iii, generateImage):
 
   return [centerX, centerY]
 
-def breadthSearch(arrGS, point, arr, folder_path, iii, generateImage):
+def breadthSearch(arrGS, point, arr, folder_path, iii, generateImage, isDouble):
   if (generateImage):
     arrCopy = arr.copy()
 
@@ -256,8 +256,13 @@ def breadthSearch(arrGS, point, arr, folder_path, iii, generateImage):
   centerY = math.ceil(sum(dtotalY) / len(dtotalY))
 
   if (generateImage):
+    if (isDouble):
+      fileName = 'dbreadth_image_' + str(iii) + '.png'
+    else:
+      fileName = 'breadth_image_' + str(iii) + '.png'
+
     img = Image.fromarray(arrCopy)
-    img.save(os.path.join(folder_path, 'breadth_image_' + str(iii) + '.png'))
+    img.save(os.path.join(folder_path, fileName))
 
   return [centerX, centerY]
 
@@ -300,7 +305,7 @@ def doubleSearch(arrGS, arr, folder_path, iii, generateImage):
 
 @profile
 def imageProcessing():
-  for iii in range(1, 15):
+  for iii in range(1, 501):
     rel_path = ('../images/circle_' + str(iii) + '.png')
     abs_path = os.path.join(script_dir, rel_path)
     folder_rel_path = ('./images/image_' + str(iii))
@@ -345,7 +350,7 @@ def imageProcessing():
 # =============================================================
 
     start_4 = time.time()
-    breadthCenter = breadthSearch(arrGS, randPoint, arr, folder_path, iii, generateImage)
+    breadthCenter = breadthSearch(arrGS, randPoint, arr, folder_path, iii, generateImage, False)
     end_4 = time.time()
 
     global timeBreadthOverall
@@ -365,7 +370,7 @@ def imageProcessing():
 # =============================================================
 
     start_6 = time.time()
-    doubleBreadthCenter = breadthSearch(arrGS, doublePoint, arr, folder_path, iii, generateImage)
+    doubleBreadthCenter = breadthSearch(arrGS, doublePoint, arr, folder_path, iii, generateImage, True)
     end_6 = time.time()
 
     global timeDoubleBreadthOverall
