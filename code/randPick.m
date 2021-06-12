@@ -7,8 +7,8 @@ function [randX, randY] = randPick(imageGS, spotX, spotY)
     height = 4e-3;
     width = 4e-3;
 
-    pxW = 752;
-    pxH = 752;
+    pxH = length(imageGS);
+    pxW = length(imageGS(1, :));
     pxSize = width / pxW;
     
     angle = deg2rad(0 : 359);           % вспомогательный массив углов
@@ -18,25 +18,25 @@ function [randX, randY] = randPick(imageGS, spotX, spotY)
     yPx = ceil((defCircleY + height/2) / pxSize);  % y - контур пятна в пикселях
     defPxRadius = ceil((max(xPx) - min(xPx)) / 2);
 
-    coloredX2 = [spotX];
-    coloredY2 = [spotY];
+    coloredX = [spotX];
+    coloredY = [spotY];
     
     % Т.К. ПОЛУЧЕННОЕ ПЯТНО 100% МЕНЬШЕ ЧЕМ ТО, ЧТО ПОЛУЧАЕТСЯ БЕЗ НАКЛОНА
     % МАТРИЦЫ МОЖНО ПОИСКАТЬ ПИКСЕЛИ В ПРЕДЕЛАХ ДИАМЕТРА НЕИЗМЕННЁНОГО КРУГА
     % В 4 КВАДРАНТАХ
 
     % левый верхний квадрат граница
-    leftTopX = coloredX2(1) - defPxRadius *  2;
-    leftTopY = coloredY2(1) - defPxRadius * 2;
+    leftTopX = coloredX(1) - defPxRadius *  2;
+    leftTopY = coloredY(1) - defPxRadius * 2;
     % левый нижний квадрат граница
-    leftBottomX = coloredX2(1) - defPxRadius * 2;
-    leftBottomY = coloredY2(1) + defPxRadius * 2;
+    leftBottomX = coloredX(1) - defPxRadius * 2;
+    leftBottomY = coloredY(1) + defPxRadius * 2;
     % правый верхний квадрат граница
-    rightTopX = coloredX2(1) + defPxRadius * 2;
-    rightTopY = coloredY2(1) - defPxRadius * 2;
+    rightTopX = coloredX(1) + defPxRadius * 2;
+    rightTopY = coloredY(1) - defPxRadius * 2;
     % правый нижний квадрат
-    rightBottomX = coloredX2(1) + defPxRadius * 2;
-    rightBottomY = coloredY2(1) + defPxRadius * 2;
+    rightBottomX = coloredX(1) + defPxRadius * 2;
+    rightBottomY = coloredY(1) + defPxRadius * 2;
 
     quadroPositionsX = [leftTopX, rightTopX, rightBottomX, leftBottomX];
     quadroPositionsY = [leftTopY, rightTopY, rightBottomY, leftBottomY];
@@ -62,18 +62,28 @@ function [randX, randY] = randPick(imageGS, spotX, spotY)
 
     isFlag = false;
     isFlag2 = false;
+    coloredX = [];
+    coloredY = [];
     
-    for i = quadroPositionsX(1) : quadroPositionsX(3)
-       for j = quadroPositionsY(1) : quadroPositionsY(3)
-           if (i <= 0 || j <= 0)
+    for y = quadroPositionsY(1) : quadroPositionsY(3)
+        columnFlag = false;
+       for x = quadroPositionsX(1) : quadroPositionsX(3)
+           if (y <= 0 || x <= 0)
               continue; 
            end
-            if(imageGS(j, i) ~= 0)
-                coloredX2(end + 1) = i;
-                coloredY2(end + 1) = j;
+            if(imageGS(y, x) ~= 0)
+                coloredX(end + 1) = x;
+                coloredY(end + 1) = y;
+                
+                columnFlag = true;
                 isFlag2 = true;
-                if (length(coloredX2) == 2)
+                
+                if (length(coloredX) == 2)
                    isFlag = true; 
+                end
+            else
+                if (columnFlag)
+                   break; 
                 end
             end
        end
@@ -84,6 +94,6 @@ function [randX, randY] = randPick(imageGS, spotX, spotY)
        end
     end
     
-    randX = ceil(sum(coloredX2) / length(coloredX2));
-    randY = ceil(sum(coloredY2) / length(coloredY2));
+    randX = ceil(sum(coloredX) / length(coloredX));
+    randY = ceil(sum(coloredY) / length(coloredY));
 end

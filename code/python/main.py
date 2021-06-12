@@ -309,12 +309,12 @@ def doubleSearch(arrGS, arr, folder_path, iii, generateImage):
       x = x * 2
 
       if (generateImage):
-        arrCopy[y][x] = [255, 255, 0]
+        arrCopy[y][x] = [255, 0, 0]
 
       if (arrGS[y][x][0] > 10 or arrGS[y][x][1] < 255):
 
         if (generateImage):
-          arrCopy[y][x] = [255, 0, 0]
+          arrCopy[y][x] = [0, 0, 255]
 
         pointX = x;
         pointY = y;
@@ -661,16 +661,16 @@ def breadthSpot(arrGS, point, arr, folder_path, iii, generateImage, algoType):
 
 @profile
 def imageProcessing():
-  for iii in range(1, 501):
+  for iii in range(1, 2):
     rel_path = ('../images/circle_' + str(iii) + '.png')
     abs_path = os.path.join(script_dir, rel_path)
-    folder_rel_path = ('./images/image_' + str(iii))
+    folder_rel_path = ('./images')
     folder_path = os.path.join(script_dir, folder_rel_path)
     # os.makedirs(os.path.join(script_dir, folder_path), exist_ok=True)
 
     arr = np.asarray(Image.open(abs_path))
     arrGS = np.asarray(Image.open(abs_path).convert('LA'))
-    generateImage = False
+    generateImage = True
 
 # brute
 # =============================================================
@@ -709,7 +709,7 @@ def imageProcessing():
 # =============================================================
 
     start_4 = time.time()
-    breadthCenter = breadthSearch(arrGS, randPoint, arr, folder_path, iii, False, 'r_')
+    breadthCenter = breadthSearch(arrGS, randPoint, arr, folder_path, iii, True, 'r_')
     end_4 = time.time()
 
     global timeBreadthOverall
@@ -914,9 +914,9 @@ data.insert(0, (
   timeRoundDoubleSpotOverall,
   ))
 
-with open('compare_py.csv', "w", newline="") as file:
-  writer = csv.writer(file)
-  for row in data:
-    line = ';'.join(row)
-    file.write(line + '\n')
-  file.close()
+# with open('compare_py.csv', "w", newline="") as file:
+#   writer = csv.writer(file)
+#   for row in data:
+#     line = ';'.join(row)
+#     file.write(line + '\n')
+#   file.close()

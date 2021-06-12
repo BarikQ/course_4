@@ -1,25 +1,32 @@
 function [bruteX, bruteY] = bruteForce(imageGS)
-    pxW = 752;
-    pxH = 752;
+    pxH = length(imageGS);
+    pxW = length(imageGS(1, :));
 
-    columns = pxW;
-    rows = pxH;
+    columns = pxH;
+    rows = pxW;
     
     coloredX = [];
     coloredY = [];
     
     isFlag = false;
     isFlag2 = false;
-
-    for  i = 1 : columns
-        for j = 1 : rows
-            if(imageGS(j, i) ~= 0)      
+    
+    for  y = 1 : rows
+        columnFlag = false;
+        for x = 1 : columns
+            if(imageGS(y, x) ~= 0)      
+                coloredX(end + 1) = x;
+                coloredY(end + 1) = y;
                 
-                coloredX(end + 1) = i;
-                coloredY(end + 1) = j;
+                columnFlag = true;
                 isFlag2 = true;
+                
                 if (length(coloredX) == 1) 
                    isFlag = true; 
+                end
+            else
+                if (columnFlag)
+                   break; 
                 end
             end
         end
@@ -29,6 +36,7 @@ function [bruteX, bruteY] = bruteForce(imageGS)
             end
         end
         isFlag2 = false;
+
     end
 
     if (length(coloredX) == 0 || length(coloredY) == 0)

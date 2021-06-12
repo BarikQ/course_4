@@ -5,8 +5,8 @@ function [breadthX, breadthY] = breadthSearch(imageGS, spotX, spotY)
        return;
     end
 
-    pxW = 752;
-    pxH = 752;
+    pxH = length(imageGS);
+    pxW = length(imageGS(1, :));
     
     breadthX = spotX;
     breadthY = spotY;
