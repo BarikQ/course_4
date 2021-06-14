@@ -707,7 +707,7 @@ def calcAngles(center, folder_path, iii):
   if (diffY == 0):
     diffY = 1
 
-  phi = math.degrees(math.atan(diffY / diffX))
+  phi = math.degrees(math.atan((diffY + 1) / (diffX + 1)))
 
   if (center[1] > pxH / 2 ):
     phi = phi + 90
@@ -723,7 +723,7 @@ def calcAngles(center, folder_path, iii):
   if (center[0] > pxW / 2 and center[1] > pxH / 2):
     phi *= -1
 
-  theta = 90 - math.degrees(math.atan(math.sqrt(diffX ** (2) + diffY ** (2)) * pxSize / h))
+  theta = 90 - math.degrees(math.atan(math.sqrt((diffX + 1) ** (2) + (diffY + 1) ** (2)) * pxSize / h))
   theta = round(theta, 3)
   phi = round(phi, 3)
   print(theta, phi)
