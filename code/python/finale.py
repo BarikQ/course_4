@@ -5,17 +5,17 @@ import os
 import csv
 import time
 import cProfile
-# from memory_profiler import profile
 from PIL import Image
 from collections import deque
 
 script_dir = os.path.dirname(__file__)
-m_height = 4e-3
-m_width = 4e-3
+m_height = 0.004
+m_width = 0.004
 d = 0.0003
+h = 0.0007
 pxW = 752
 pxH = 752
-pxSize = pxW / m_width
+pxSize = m_width / pxW
 defPxDiameter = math.ceil(d * pxSize)
 data = []
 
@@ -171,7 +171,6 @@ def randomSpot(arrGS, arr, folder_path, iii, generateImage):
   return [pointX, pointY]
 
 def randomSpot_2(arrGS, arr, folder_path, iii, generateImage):
-  return [-1, -1]
   pointX = -1
   pointY = -1
   find = False
@@ -204,6 +203,7 @@ def randomSpot_2(arrGS, arr, folder_path, iii, generateImage):
   return [pointX, pointY]
 
 def quadroSearch(arrGS, point, arr, folder_path, iii, generateImage):
+  defPxDiameter = math.ceil(d * pxW / m_width)
   # if (generateImage):
     # arrCopy = arr.copy()
 
@@ -380,39 +380,39 @@ def doubleSearch(arrGS, arr, folder_path, iii, generateImage):
     if (flag):
       break
 
-  # if (pointX == -1 or pointY == -1):
-  #   rows = [0, len(arrGS) - 1]
-  #   cols = [0, len(arrGS[0]) - 1]
+  if (pointX == -1 or pointY == -1):
+    rows = [0, len(arrGS) - 1]
+    cols = [0, len(arrGS[0]) - 1]
 
-  #   for y in rows:
-  #     for x in range(math.floor(len(arrGS[y]) / 2)):
+    for y in rows:
+      for x in range(math.floor(len(arrGS[y]) / 2)):
 
-  #       # if (generateImage):
-  #         # arrCopy[y][x] = [255, 255, 0]
+        # if (generateImage):
+          # arrCopy[y][x] = [255, 255, 0]
 
-  #       if (arrGS[y][x * 2 + 1][0] > 10 or arrGS[y][x * 2 + 1][1] < 255):
+        if (arrGS[y][x * 2 + 1][0] > 10 or arrGS[y][x * 2 + 1][1] < 255):
 
-  #         # if (generateImage):
-  #           # arrCopy[y][x] = [255, 0, 0]
+          # if (generateImage):
+            # arrCopy[y][x] = [255, 0, 0]
 
-  #         pointX = x;
-  #         pointY = y;
-  #         break
+          pointX = x;
+          pointY = y;
+          break
 
-  #   for x in cols:
-  #     for y in range(math.floor(len(arrGS) / 2)):
+    for x in cols:
+      for y in range(math.floor(len(arrGS) / 2)):
 
-  #       # if (generateImage):
-  #         # arrCopy[y][x] = [255, 255, 0]
+        # if (generateImage):
+          # arrCopy[y][x] = [255, 255, 0]
 
-  #       if (arrGS[y * 2 + 1][x][0] > 10 or arrGS[y * 2 + 1][x][1] < 255):
+        if (arrGS[y * 2 + 1][x][0] > 10 or arrGS[y * 2 + 1][x][1] < 255):
 
-  #         # if (generateImage):
-  #           # arrCopy[y][x] = [255, 0, 0]
+          # if (generateImage):
+            # arrCopy[y][x] = [255, 0, 0]
 
-  #         pointX = x;
-  #         pointY = y;
-  #         break
+          pointX = x;
+          pointY = y;
+          break
 
   # if (generateImage):
     # img = Image.fromarray(arrCopy)
@@ -588,39 +588,39 @@ def roundDoubleSearch(arrGS, arr, folder_path, iii, generateImage):
     if (flag):
        break;
 
-  # if (pointX == -1 or pointY == -1):
-  #   rows = [0, len(arrGS) - 1]
-  #   cols = [0, len(arrGS[0]) - 1]
+  if (pointX == -1 or pointY == -1):
+    rows = [0, len(arrGS) - 1]
+    cols = [0, len(arrGS[0]) - 1]
 
-    # for y in rows:
-    #   for x in range(len(arrGS[y])):
+    for y in rows:
+      for x in range(len(arrGS[y])):
 
-    #     # if (generateImage):
-    #       # arrCopy[y][x] = [255, 255, 0]
+        # if (generateImage):
+          # arrCopy[y][x] = [255, 255, 0]
 
-    #     if (arrGS[y][x][0] > 10 or arrGS[y][x][1] < 255):
+        if (arrGS[y][x][0] > 10 or arrGS[y][x][1] < 255):
 
-    #       # if (generateImage):
-    #         # arrCopy[y][x] = [255, 0, 0]
+          # if (generateImage):
+            # arrCopy[y][x] = [255, 0, 0]
 
-    #       pointX = x;
-    #       pointY = y;
-    #       break
+          pointX = x;
+          pointY = y;
+          break
 
-    # for x in cols:
-    #   for y in range(len(arrGS)):
+    for x in cols:
+      for y in range(len(arrGS)):
 
-    #     # if (generateImage):
-    #       # arrCopy[y][x] = [255, 255, 0]
+        # if (generateImage):
+          # arrCopy[y][x] = [255, 255, 0]
 
-    #     if (arrGS[y][x][0] > 10 or arrGS[y][x][1] < 255):
+        if (arrGS[y][x][0] > 10 or arrGS[y][x][1] < 255):
 
-    #       # if (generateImage):
-    #         # arrCopy[y][x] = [255, 0, 0]
+          # if (generateImage):
+            # arrCopy[y][x] = [255, 0, 0]
 
-    #       pointX = x;
-    #       pointY = y;
-    #       break
+          pointX = x;
+          pointY = y;
+          break
 
   # if (generateImage):
     # img = Image.fromarray(arrCopy)
@@ -629,7 +629,6 @@ def roundDoubleSearch(arrGS, arr, folder_path, iii, generateImage):
   return [pointX, pointY]
 
 def breadthSpot(arrGS, point, arr, folder_path, iii, generateImage, algoType):
-  return [0, 0]
   # if (generateImage):
     # arrCopy = arr.copy()
   if (point[0] == -1 or point[1] == -1):
@@ -698,9 +697,43 @@ def breadthSpot(arrGS, point, arr, folder_path, iii, generateImage, algoType):
 
   return [spotX, spotY]
 
+def calcAngles(center, folder_path, iii):
+  diffX = abs(center[0] - pxW / 2)
+  diffY = abs(center[1] - pxH / 2)
+
+  if (diffX == 0):
+    diffX = 1
+    
+  if (diffY == 0):
+    diffY = 1
+
+  phi = math.degrees(math.atan(diffY / diffX))
+
+  if (center[1] > pxH / 2 ):
+    phi = phi + 90
+  else:
+    phi = phi - 90
+
+  if (center[0] < pxW / 2 and center[1] > pxH / 2):
+    phi = phi
+  if (center[0] > pxW / 2 and center[1] < pxH / 2):
+    phi = phi
+  if (center[0] < pxW / 2 and center[1] < pxH / 2):
+    phi *= -1
+  if (center[0] > pxW / 2 and center[1] > pxH / 2):
+    phi *= -1
+
+  theta = 90 - math.degrees(math.atan(math.sqrt(diffX ** (2) + diffY ** (2)) * pxSize / h))
+  theta = round(theta, 3)
+  phi = round(phi, 3)
+  print(theta, phi)
+
+  return [phi, theta]
+
+  
 @profile
 def imageProcessing():
-  for iii in range(1, 50):
+  for iii in range(1, 151):
     rel_path = ('../images/circle_' + str(iii) + '.png')
     abs_path = os.path.join(script_dir, rel_path)
     folder_rel_path = ('./images/image_' + str(iii))
@@ -828,26 +861,25 @@ def imageProcessing():
     "\n  |  round d spot", timeRoundDoubleSpotString,
     "\n"
     )
-    
+    [phi, theta] = [0, 0]
+    if (not quadroCenter[0] == 0):
+      [phi, theta] = calcAngles(quadroCenter, folder_path, iii)
+
 # append data
 # =============================================================
 
     data.append((
-      str(bruteCenter[0]),
-      str(bruteCenter[1]),
-      ''.join(timeBruteDefString),
+      # str(bruteCenter[0]),
+      # str(bruteCenter[1]),
+      # ''.join(timeBruteDefString),
       str(quadroCenter[0]),
       str(quadroCenter[1]),
-      ''.join(timeQuadroCenterString),
+      # ''.join(timeQuadroCenterString),
       str(breadthCenter[0]),
       str(breadthCenter[1]),
-      ''.join(timeBreadthCenterString),
-      ''.join(timeBruteSpotString),
-      ''.join(timeRandSpotString),
-      ''.join(timeDoubleSpotString),
-      ''.join(timeRoundSpotString),
-      ''.join(timeBreadthSpotString),
-      ''.join(timeRoundDoubleSpotString),
+      '',
+      str(theta),
+      str(phi)
     ))
 
 imageProcessing()
@@ -886,31 +918,31 @@ times = [
   "\n Round&Double spot:", timeRoundDoubleSpot_s,
   "\n"
 ]
-print(times)
-
-data.insert(0, ('Brute X', 'Brute Y', 'time',
-  'Quad X', 'Quad Y', 'time',
-  'Breadth X', 'Breadth Y', 'time', 
-  'Brute', 'Rand', 'Double', 'Round', 'Breadth', 'Round&Double'
-)) 
+# print(times)
 
 data.insert(0, (
-  '', '', timeBruteDef_S, 
-  '', '', timeQuadroCenter_S, 
-  '', '', timeBreadthCenter_S, 
-  timeBruteSpot_S,
-  timeRandSpot_S,
-  timeDoubleSpot_S,
-  timeRoundSpot_S,
-  timeBreadthSpot_S,
-  timeRoundDoubleSpot_s,
-  ))
+  'Quad X', 'Quad Y', 
+  'Breadth X', 'Breadth Y', 
+  '', 'Theta', 'Phi'
+)) 
+
+# data.insert(0, (
+#   '', '', timeBruteDef_S, 
+#   '', '', timeQuadroCenter_S, 
+#   '', '', timeBreadthCenter_S, 
+#   timeBruteSpot_S,
+#   timeRandSpot_S,
+#   timeDoubleSpot_S,
+#   timeRoundSpot_S,
+#   timeBreadthSpot_S,
+#   timeRoundDoubleSpot_s,
+#   ))
 
 for row in data:
   line = ';'.join(row)
-  print(line)
+  # print(line)
 
-with open('compare_py2.csv', "w", newline="") as file:
+with open('compare_py_last.csv', "w", newline="") as file:
   writer = csv.writer(file)
   for row in data:
     line = ';'.join(row)

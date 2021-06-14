@@ -24,7 +24,7 @@ randMinPhi = -180;
 randMaxPhi = 180;
  
 % ЗАПИСЬ В ТАБЛИЦУ
-filename = './tables/compare_new.xlsx';
+filename = './tables/compare_last.xlsx';
 fileData = {"Theta", "Phi", "Центр пятна X", "Центр пятна Y"};
 writecell(fileData, filename, 'sheet', 1, 'Range', "B1");
 dataArray = [];
@@ -33,11 +33,11 @@ yArray = [];
 thetaArray = [];
 phiArray = [];
  
-for iii = 1 : 1
-    theta_src = 55;     % исходный зенитный угол
-    phi_src = 58;       % исходный азимутальный угол
-%     theta_src = randMinTh + rand(1, 1) * (randMaxTh - randMinTh);     % СЛУЧАЙНЫЙ зенитный угол
-%     phi_src = randMinPhi + rand(1, 1) * (randMaxPhi - randMinPhi);       % СЛУЧАЙНЫЙ азимутальный угол
+for iii = 1 : 150
+%     theta_src = 55;     % исходный зенитный угол
+%     phi_src = 58;       % исходный азимутальный угол
+    theta_src = randMinTh + rand(1, 1) * (randMaxTh - randMinTh);     % СЛУЧАЙНЫЙ зенитный угол
+    phi_src = randMinPhi + rand(1, 1) * (randMaxPhi - randMinPhi);       % СЛУЧАЙНЫЙ азимутальный угол
     
     theta = deg2rad(90) - deg2rad(theta_src);      % зенитный угол падения солнечных лучей
     phi = deg2rad(phi_src);      % азимутальный угол падения солнечных лучей
@@ -124,8 +124,9 @@ for iii = 1 : 1
 %     psX = ceil(sum(x_) / length(x_));
 %     psY = ceil(sum(y_) / length(y_));
     imwrite(image, strcat("./images/circle_", num2str(iii), ".png"));
-    
-    fileData = {rad2deg(theta), rad2deg(phi), psY, psX};
+   
+    fileData = {round(rad2deg(theta)*1000)/1000, round(rad2deg(phi)*1000)/1000, psY, psX};
     writecell(fileData, filename, 'sheet', 1, 'Range', strcat("B" + num2str(iii + 1)));
+    iii
 end
   

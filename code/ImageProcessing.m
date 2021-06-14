@@ -8,8 +8,6 @@ t = 100e-6;     % толщина отверстия
 h = 0.0007;     % высота отверстия
 
 format long
-% height = 4.51e-3;    % Размеры матрицы
-% width = 2.88e-3;
 height = 4e-3;
 width = 4e-3;
 
@@ -24,7 +22,7 @@ xPx = ceil((defCircleX + width/2) / pxSize);   % x - контур пятна в 
 yPx = ceil((defCircleY + height/2) / pxSize);  % y - контур пятна в пикселях
 defPxRadius = ceil((max(xPx) - min(xPx)) / 2);
 
-filename = './tables/compare_new2.xlsx';
+filename = './tables/compare_last.xlsx';
 
 fileData = [
     "Brute X", "Brute Y", "time", ...
@@ -60,61 +58,61 @@ for iii = 1 : 500
     imageProcessed = zeros(rows, columns, 3);
 
     %% brute force default
-    tic
+%     tic
     [bruteX, bruteY] = bruteForce(imageGS);
-    timeBruteDef = round(toc, 4);
+%     timeBruteDef = round(toc, 4);
     
     %% brute spot
-    tic
+%     tic
     [spotX, spotY] = bruteSpot(imageGS);
-    timeBruteSpot = round(toc, 4);
+%     timeBruteSpot = round(toc, 4);
     
     %% rand spot
-    tic
+%     tic
     [spotX, spotY] = randSpot(imageGS);
-    timeRandSpot = round(toc, 4);
+%     timeRandSpot = round(toc, 4);
     
     %% quad center
-    tic
+%     tic
     [quadX, quadY] = randPick(imageGS, spotX, spotY);
-    timeQuadro = round(toc, 4);
+%     timeQuadro = round(toc, 4);
     
     %% breadth search
-    tic
+%     tic
     [breadthX, breadthY] = breadthSearch(imageGS, spotX, spotY);
-    timeBreadth = round(toc, 4);
+%     timeBreadth = round(toc, 4);
     
     %% double spot
-    tic
+%     tic
     [doubleY, doubleX] = doubleSpot(imageGS);
-    timeDoubleSpot = round(toc, 4);
+%     timeDoubleSpot = round(toc, 4);
     
     %% round spot
-    tic
+%     tic
     [roundX, roundY] = roundSpot(imageGS);
-    timeRoundSpot = round(toc, 4);
+%     timeRoundSpot = round(toc, 4);
     
     %% breadth spot
-    tic
+%     tic
 %     [breadthSpotX, breadthSpotY] = breadthSpot(imageGS, pxW / 2, pxH / 2);
-    timeBreadthSpot = round(toc, 4);
+%     timeBreadthSpot = round(toc, 4);
     
     %% round double spot
-    tic
+%     tic
     [roundDoubleX, roundDoubleY] = roundDoubleSpot(imageGS);
-    timeRoundDoubleSpot = round(toc, 4);
+%     timeRoundDoubleSpot = round(toc, 4);
     
     format short g
-    totalBruteDef = totalBruteDef + timeBruteDef;
-    totalQuadro = totalQuadro + timeQuadro;
-    totalBreadth = totalBreadth + timeBreadth;
+%     totalBruteDef = totalBruteDef + timeBruteDef;
+%     totalQuadro = totalQuadro + timeQuadro;
+%     totalBreadth = totalBreadth + timeBreadth;
     
-    totalBruteSpot = totalBruteSpot + timeBruteSpot;
-    totalRandSpot = totalRandSpot + timeRandSpot;
-    totalBreadthSpot = totalBreadthSpot + timeBreadthSpot;
-    totalDoubleSpot = totalDoubleSpot + timeDoubleSpot;
-    totalRoundSpot = totalRoundSpot + timeRoundSpot;
-    totalRoundDoubleSpot = totalRoundDoubleSpot + timeRoundDoubleSpot;
+%     totalBruteSpot = totalBruteSpot + timeBruteSpot;
+%     totalRandSpot = totalRandSpot + timeRandSpot;
+%     totalBreadthSpot = totalBreadthSpot + timeBreadthSpot;
+%     totalDoubleSpot = totalDoubleSpot + timeDoubleSpot;
+%     totalRoundSpot = totalRoundSpot + timeRoundSpot;
+%     totalRoundDoubleSpot = totalRoundDoubleSpot + timeRoundDoubleSpot;
           
     fileData = {
         bruteX, bruteY, timeBruteDef,...
@@ -129,16 +127,16 @@ for iii = 1 : 500
     iii
 end
 
-totalBruteDef = round(totalBruteDef, 4);
-totalQuadro = round(totalQuadro, 4);
-totalBreadth = round(totalBreadth, 4);
+% totalBruteDef = round(totalBruteDef, 4);
+% totalQuadro = round(totalQuadro, 4);
+% totalBreadth = round(totalBreadth, 4);
 
-totalBruteSpot = round(totalBruteSpot, 4);
-totalRandSpot = round(totalRandSpot, 4);
-totalBreadthSpot = round(totalBreadthSpot, 4);
-totalDoubleSpot = round(totalDoubleSpot, 4);
-totalRoundSpot = round(totalRoundSpot, 4);
-totalRoundDoubleSpot = round(totalRoundDoubleSpot, 4);
+% totalBruteSpot = round(totalBruteSpot, 4);
+% totalRandSpot = round(totalRandSpot, 4);
+% totalBreadthSpot = round(totalBreadthSpot, 4);
+% totalDoubleSpot = round(totalDoubleSpot, 4);
+% totalRoundSpot = round(totalRoundSpot, 4);
+% totalRoundDoubleSpot = round(totalRoundDoubleSpot, 4);
 
 fileData = [
     "Brute X", "Brute Y", totalBruteDef, ...
