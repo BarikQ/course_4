@@ -26,7 +26,7 @@ randMaxPhi = 180;
 % ЗАПИСЬ В ТАБЛИЦУ
 filename = './tables/compare_last.xlsx';
 fileData = {"Theta", "Phi", "Центр пятна X", "Центр пятна Y"};
-writecell(fileData, filename, 'sheet', 1, 'Range', "B1");
+% writecell(fileData, filename, 'sheet', 1, 'Range', "B1");
 dataArray = [];
 xArray = [];
 yArray = [];
@@ -123,10 +123,10 @@ for iii = 1 : 150
     
 %     psX = ceil(sum(x_) / length(x_));
 %     psY = ceil(sum(y_) / length(y_));
-    imwrite(image, strcat("./images/circle_", num2str(iii), ".png"));
+%     imwrite(image, strcat("./images/circle_", num2str(iii), ".png"));
    
     fileData = {round(rad2deg(theta)*1000)/1000, round(rad2deg(phi)*1000)/1000, psY, psX};
-    writecell(fileData, filename, 'sheet', 1, 'Range', strcat("B" + num2str(iii + 1)));
+%     writecell(fileData, filename, 'sheet', 1, 'Range', strcat("B" + num2str(iii + 1)));
     iii
 end
   
