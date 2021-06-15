@@ -13,11 +13,13 @@ m_height = 0.004
 m_width = 0.004
 d = 0.0003
 h = 0.0007
+t = 100e-6
 pxW = 752
 pxH = 752
 pxSize = m_width / pxW
 defPxDiameter = math.ceil(d * pxSize)
 data = []
+# return
 
 # =================================================
 
@@ -707,7 +709,7 @@ def calcAngles(center, folder_path, iii):
   if (diffY == 0):
     diffY = 1
 
-  phi = math.degrees(math.atan((diffY + 1) / (diffX + 1)))
+  phi = math.degrees(math.atan((diffY) / (diffX)))
 
   if (center[1] > pxH / 2 ):
     phi = phi + 90
@@ -723,7 +725,7 @@ def calcAngles(center, folder_path, iii):
   if (center[0] > pxW / 2 and center[1] > pxH / 2):
     phi *= -1
 
-  theta = 90 - math.degrees(math.atan(math.sqrt((diffX + 1) ** (2) + (diffY + 1) ** (2)) * pxSize / h))
+  theta = 90 - math.degrees(math.atan(math.sqrt((diffX) ** (2) + (diffY) ** (2)) * pxSize / (h + t/2)))
   theta = round(theta, 3)
   phi = round(phi, 3)
   print(theta, phi)
